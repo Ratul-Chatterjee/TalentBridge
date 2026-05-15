@@ -403,7 +403,7 @@ function AdminRequirements() {
                   Approve
                 </Button>
                 <Button variant={item.status === 'partially_approved' ? 'contained' : 'outlined'} onClick={() => handleStatusUpdate(item.id, 'partially_approved')}>
-                  Hold
+                  Partially Approve
                 </Button>
                 <Button color="error" variant={item.status === 'rejected' ? 'contained' : 'outlined'} onClick={() => handleStatusUpdate(item.id, 'rejected')}>
                   Reject

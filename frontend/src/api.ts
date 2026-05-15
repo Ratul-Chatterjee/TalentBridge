@@ -89,8 +89,8 @@ export const getRequirement = (id: string) =>
 export const updateRequirementStatus = (id: string, status: string) =>
   api.patch<Requirement>(`/requirements/${id}/status`, { status });
 
-export const confirmPartialApproval = (id: string) =>
-  api.patch<Requirement>(`/requirements/${id}/confirm-partial`, { confirmed: true });
+export const confirmPartialApproval = (id: string, confirmed: boolean) =>
+  api.patch<Requirement>(`/requirements/${id}/confirm-partial`, { confirmed });
 
 // Roles
 export const getRolesByRequirement = (requirementId: string) =>
@@ -117,8 +117,8 @@ export const getInterviewRounds = (candidateId: string) =>
   api.get<InterviewRound[]>('/interview-rounds', { params: { candidateId } });
 
 // Candidate Notes
-export const addCandidateNote = (candidateId: string, text: string) =>
-  api.post('/candidate-notes', { candidateId, noteText: text, createdBy: 'admin' });
+export const addCandidateNote = (candidateId: string, text: string, createdBy: string) =>
+  api.post('/candidate-notes', { candidateId, noteText: text, createdBy });
 
 // File Upload
 export const uploadJD = (file: File) => {
