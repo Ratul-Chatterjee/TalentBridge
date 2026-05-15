@@ -15,7 +15,6 @@ TalentBridge is a full-stack hiring requirements platform for managing roles, ca
 TalentBridge/
 ├── frontend/
 ├── backend/
-├── render.yaml
 └── .gitignore
 ```
 

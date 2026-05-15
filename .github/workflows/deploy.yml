@@ -36,17 +36,6 @@ jobs:
       - name: Run Frontend Tests
         run: cd frontend && npm run lint || true
 
-  deploy-render:
-    needs: build-test
-    runs-on: ubuntu-latest
-    if: github.ref == 'refs/heads/main'
-    steps:
-      - uses: actions/checkout@v3
-      
-      - name: Trigger Render Deployment
-        run: |
-          curl -X POST https://api.render.com/deploy/srv-${{ secrets.RENDER_SERVICE_ID }}?key=${{ secrets.RENDER_API_KEY }}
-
   deploy-vercel:
     needs: build-test
     runs-on: ubuntu-latest
