@@ -78,6 +78,25 @@ public class JpaTalentBridgeStore {
         return list.stream().map(r -> new RequirementSummaryResponse(r.getId(), r.getCompanyId(), companyRepo.findById(r.getCompanyId()).map(Company::getName).orElse(""), DriveType.valueOf(r.getDriveType()), RequirementStatus.valueOf(r.getOverallStatus()), r.isPartialApprovalConfirmed(), r.getCreatedAt(), r.getUpdatedAt(), roleRepo.findByRequirementIdOrderByCreatedAtAsc(r.getId()).size())).collect(Collectors.toList());
     }
 
+    public List<RequirementSummaryResponse> listRequirements(String companyId) {
+        if (companyId == null || companyId.isBlank()) {
+            return requirementRepo.findAll().stream()
+                .sorted((a, b) -> b.getCreatedAt().compareTo(a.getCreatedAt()))
+                .map(r -> new RequirementSummaryResponse(
+                    r.getId(),
+                    r.getCompanyId(),
+                    companyRepo.findById(r.getCompanyId()).map(Company::getName).orElse(""),
+                    DriveType.valueOf(r.getDriveType()),
+                    RequirementStatus.valueOf(r.getOverallStatus()),
+                    r.isPartialApprovalConfirmed(),
+                    r.getCreatedAt(),
+                    r.getUpdatedAt(),
+                    roleRepo.findByRequirementIdOrderByCreatedAtAsc(r.getId()).size()))
+                .collect(Collectors.toList());
+        }
+        return listRequirementsByCompany(companyId);
+    }
+
     public RequirementDetailResponse toRequirementDetail(String id) {
         Requirement r = requirementRepo.findById(id).orElseThrow(() -> new IllegalArgumentException("Requirement not found"));
         List<RoleResponse> roles = roleRepo.findByRequirementIdOrderByCreatedAtAsc(id).stream().map(role -> new RoleResponse(role.getId(), role.getRequirementId(), role.getRoleTitle(), role.getPositionCount(), RoleStatus.valueOf(role.getIndividualRoleStatus()), role.getAboutCompany(), role.getAboutRole(), role.getRequiredSkills(), role.getExperience(), role.getCompensation(), role.getWorkingHours(), role.getLocation(), role.getAdminInternalNotes(), role.getCreatedAt(), role.getUpdatedAt())).collect(Collectors.toList());
@@ -92,6 +111,22 @@ public class JpaTalentBridgeStore {
         r.setUpdatedAt(Instant.now());
         requirementRepo.save(r);
         return new RequirementData(r.getId(), r.getCompanyId(), companyRepo.findById(r.getCompanyId()).map(Company::getName).orElse(""), DriveType.valueOf(r.getDriveType()), RequirementStatus.valueOf(r.getOverallStatus()), r.isPartialApprovalConfirmed(), r.getCreatedAt(), r.getUpdatedAt());
+    }
+
+    public RequirementData updateRequirementStatus(String requirementId, RequirementStatus status) {
+        Requirement r = requirementRepo.findById(requirementId).orElseThrow(() -> new IllegalArgumentException("Requirement not found"));
+        r.setOverallStatus(status.name());
+        r.setUpdatedAt(Instant.now());
+        requirementRepo.save(r);
+        return new RequirementData(
+            r.getId(),
+            r.getCompanyId(),
+            companyRepo.findById(r.getCompanyId()).map(Company::getName).orElse(""),
+            DriveType.valueOf(r.getDriveType()),
+            RequirementStatus.valueOf(r.getOverallStatus()),
+            r.isPartialApprovalConfirmed(),
+            r.getCreatedAt(),
+            r.getUpdatedAt());
     }
 
     public RoleResponse updateRoleStatus(String roleId, RoleStatus status) {

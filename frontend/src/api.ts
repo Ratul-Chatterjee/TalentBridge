@@ -13,8 +13,8 @@ export const api = axios.create({
 export interface Requirement {
   id: string;
   companyId: string;
-  driveType: 'STANDARD' | 'EXPRESS' | 'URGENT';
-  status: 'pending review' | 'partially approved' | 'approved' | 'rejected';
+  driveType: 'single_role' | 'hiring_drive';
+  status: 'pending_review' | 'partially_approved' | 'approved' | 'rejected' | 'in_progress' | 'closed';
   partialApprovalConfirmed?: boolean;
   roles?: Role[];
   createdAt: string;
@@ -26,7 +26,7 @@ export interface Role {
   requirementId: string;
   roleTitle: string;
   positionCount: number;
-  status: 'open' | 'closed' | 'cancelled';
+  status: 'pending_review' | 'approved' | 'held' | 'rejected' | 'in_progress' | 'closed';
   aboutCompany?: string;
   aboutRole?: string;
   requiredSkills?: string;
@@ -48,7 +48,7 @@ export interface Candidate {
   currentCompany?: string;
   yearsExperience?: number;
   source?: string;
-  currentStage: 'Applied' | 'Screened' | 'Interviewing' | 'Offered' | 'Hired' | 'Rejected';
+  currentStage: 'applied' | 'screened' | 'interviewing' | 'offered' | 'hired' | 'rejected';
   resumeFileUrl?: string;
   createdAt: string;
   updatedAt: string;
@@ -90,7 +90,7 @@ export const updateRequirementStatus = (id: string, status: string) =>
   api.patch<Requirement>(`/requirements/${id}/status`, { status });
 
 export const confirmPartialApproval = (id: string) =>
-  api.patch<Requirement>(`/requirements/${id}/confirm-partial`);
+  api.patch<Requirement>(`/requirements/${id}/confirm-partial`, { confirmed: true });
 
 // Roles
 export const getRolesByRequirement = (requirementId: string) =>
@@ -104,21 +104,21 @@ export const createCandidate = (data: any) =>
   api.post<Candidate>('/candidates', data);
 
 export const getCandidatesByRole = (roleId: string) =>
-  api.get<Candidate[]>(`/roles/${roleId}/candidates`);
+  api.get<Candidate[]>('/candidates', { params: { roleId } });
 
 export const getCandidate = (candidateId: string) =>
   api.get<Candidate>(`/candidates/${candidateId}`);
 
 // Interview Rounds
 export const addInterviewRound = (candidateId: string, data: any) =>
-  api.post<InterviewRound>(`/candidates/${candidateId}/interview-rounds`, data);
+  api.post<InterviewRound>('/interview-rounds', { ...data, candidateId });
 
 export const getInterviewRounds = (candidateId: string) =>
-  api.get<InterviewRound[]>(`/candidates/${candidateId}/interviews`);
+  api.get<InterviewRound[]>('/interview-rounds', { params: { candidateId } });
 
 // Candidate Notes
 export const addCandidateNote = (candidateId: string, text: string) =>
-  api.post(`/candidates/${candidateId}/notes`, { noteText: text });
+  api.post('/candidate-notes', { candidateId, noteText: text, createdBy: 'admin' });
 
 // File Upload
 export const uploadJD = (file: File) => {

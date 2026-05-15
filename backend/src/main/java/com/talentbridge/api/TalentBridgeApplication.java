@@ -79,8 +79,8 @@ class TalentBridgeController {
   }
 
   @GetMapping("/requirements")
-  ResponseEntity<List<RequirementSummaryResponse>> listRequirements(@RequestParam String companyId) {
-    return ResponseEntity.ok(jpaStore.listRequirementsByCompany(companyId));
+  ResponseEntity<List<RequirementSummaryResponse>> listRequirements(@RequestParam(required = false) String companyId) {
+    return ResponseEntity.ok(jpaStore.listRequirements(companyId));
   }
 
   @GetMapping("/requirements/{id}")
@@ -91,6 +91,12 @@ class TalentBridgeController {
   @PatchMapping("/requirements/{id}/confirm-partial")
   ResponseEntity<RequirementDetailResponse> confirmPartial(@PathVariable String id, @RequestBody PartialConfirmationRequest request) {
     RequirementData requirement = jpaStore.confirmPartial(id, request.confirmed());
+    return ResponseEntity.ok(jpaStore.toRequirementDetail(requirement.id()));
+  }
+
+  @PatchMapping("/requirements/{id}/status")
+  ResponseEntity<RequirementDetailResponse> updateRequirementStatus(@PathVariable String id, @RequestBody UpdateRequirementStatusRequest request) {
+    RequirementData requirement = jpaStore.updateRequirementStatus(id, request.status());
     return ResponseEntity.ok(jpaStore.toRequirementDetail(requirement.id()));
   }
 
@@ -235,6 +241,7 @@ enum LlmProvider { openai, gemini, claude }
 record LoginRequest(String userType) {}
 record LoginResponse(String roleIndicator) {}
 record PartialConfirmationRequest(boolean confirmed) {}
+record UpdateRequirementStatusRequest(RequirementStatus status) {}
 record UpdateRoleStatusRequest(RoleStatus status) {}
 record UpdateRoleNotesRequest(String notes) {}
 record RawJdRequest(String rawText) {}

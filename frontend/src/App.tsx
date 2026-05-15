@@ -41,6 +41,8 @@ type ChatMessage = {
   text: string;
 };
 
+const formatStatus = (value: string) => value.replace(/_/g, ' ');
+
 function App({ mode, onToggleMode }: { mode: 'light' | 'dark'; onToggleMode: () => void }) {
   const { userType } = useAuth();
   const [mobileOpen, setMobileOpen] = useState(false);
@@ -251,7 +253,7 @@ function CompanyDashboard() {
                   </Button>
                 </Stack>
                 <Stack direction="row" spacing={1} sx={{ mt: 2 }}>
-                  <Chip label={item.status} />
+                  <Chip label={formatStatus(item.status)} />
                   <Chip label={`${item.roles?.length || 0} roles`} />
                 </Stack>
               </CardContent>
@@ -395,12 +397,12 @@ function AdminRequirements() {
           <Card key={item.id}>
             <CardContent>
               <Typography variant="h6">{item.roles?.[0]?.roleTitle || 'Requirement'}</Typography>
-              <Typography color="text.secondary">{item.driveType} • {item.status}</Typography>
+              <Typography color="text.secondary">{formatStatus(item.driveType)} • {formatStatus(item.status)}</Typography>
               <Stack direction="row" spacing={1} sx={{ mt: 2 }}>
                 <Button variant={item.status === 'approved' ? 'contained' : 'outlined'} onClick={() => handleStatusUpdate(item.id, 'approved')}>
                   Approve
                 </Button>
-                <Button variant={item.status === 'partially approved' ? 'contained' : 'outlined'} onClick={() => handleStatusUpdate(item.id, 'partially approved')}>
+                <Button variant={item.status === 'partially_approved' ? 'contained' : 'outlined'} onClick={() => handleStatusUpdate(item.id, 'partially_approved')}>
                   Hold
                 </Button>
                 <Button color="error" variant={item.status === 'rejected' ? 'contained' : 'outlined'} onClick={() => handleStatusUpdate(item.id, 'rejected')}>
