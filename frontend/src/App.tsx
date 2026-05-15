@@ -49,7 +49,9 @@ function App({ mode, onToggleMode }: { mode: 'light' | 'dark'; onToggleMode: () 
   if (!userType) {
     return (
       <Routes>
-        <Route path="*" element={<LoginPage />} />
+        <Route path="/" element={<LandingPage />} />
+        <Route path="/login" element={<LoginPage />} />
+        <Route path="*" element={<Navigate to="/" replace />} />
       </Routes>
     );
   }
@@ -190,6 +192,61 @@ function LoginPage() {
         </CardContent>
       </Card>
     </Container>
+  );
+}
+
+function LandingPage() {
+  return (
+    <Box sx={{ minHeight: '100vh', bgcolor: 'background.default' }}>
+      <Container maxWidth="lg" sx={{ py: { xs: 8, md: 12 } }}>
+        <Stack spacing={6}>
+          <Stack spacing={3} sx={{ maxWidth: 820 }}>
+            <Chip label="TalentBridge" sx={{ width: 'fit-content', fontWeight: 700 }} />
+            <Typography variant="h2" sx={{ fontWeight: 800, lineHeight: 1.1 }}>
+              A structured hiring requirements workspace for fast, aligned decisions.
+            </Typography>
+            <Typography color="text.secondary" sx={{ fontSize: { xs: '1rem', md: '1.1rem' } }}>
+              TalentBridge helps company teams and hiring operations convert scattered hiring inputs into consistent role requirements that are easier to review, approve, and execute.
+            </Typography>
+            <Stack direction={{ xs: 'column', sm: 'row' }} spacing={2}>
+              <Button size="large" variant="contained" component={NavLink} to="/login">
+                Enter TalentBridge
+              </Button>
+            </Stack>
+          </Stack>
+
+          <Stack spacing={3}>
+            <SectionCard
+              title="Purpose of this website"
+              description="TalentBridge is designed to standardize requirement intake and handoff between requesting teams and hiring admins so every role starts with clear, complete, and review-ready context."
+            />
+            <SectionCard
+              title="Who is it for"
+              description="It is built for company stakeholders who raise hiring needs and internal admin or talent teams who evaluate, approve, and move those requirements into an active hiring pipeline."
+            />
+            <SectionCard
+              title="What it is solving"
+              description="It solves fragmented requirement collection, ambiguous job details, and delayed approvals by introducing a guided intake flow, centralized review visibility, and clearer role-level decision tracking."
+            />
+          </Stack>
+        </Stack>
+      </Container>
+    </Box>
+  );
+}
+
+function SectionCard({ title, description }: { title: string; description: string }) {
+  return (
+    <Card sx={{ transition: 'transform 160ms ease, box-shadow 160ms ease', '&:hover': { transform: 'translateY(-2px)' } }}>
+      <CardContent sx={{ p: { xs: 3, md: 4 } }}>
+        <Stack spacing={1.5}>
+          <Typography variant="h5" sx={{ fontWeight: 700 }}>
+            {title}
+          </Typography>
+          <Typography color="text.secondary">{description}</Typography>
+        </Stack>
+      </CardContent>
+    </Card>
   );
 }
 
