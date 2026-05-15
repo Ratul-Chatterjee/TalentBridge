@@ -3,7 +3,7 @@ services:
     name: talentbridge-api
     env: java
     buildCommand: cd backend && mvn -DskipTests clean compile package
-    startCommand: cd backend && java -cp target/classes:target/dependency/* com.talentbridge.api.TalentBridgeApplication
+    startCommand: cd backend && java -jar target/*.jar
     plan: free
     envVars:
       - key: SUPABASE_DB_URL
