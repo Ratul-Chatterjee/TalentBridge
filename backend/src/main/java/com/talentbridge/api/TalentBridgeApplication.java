@@ -59,10 +59,9 @@ class TalentBridgeController {
       @Value("${app.supabase.project-url:}") String projectUrl,
       @Value("${app.supabase.service-role-key:}") String serviceRoleKey,
       @Value("${app.supabase.resume-bucket:resumes}") String resumeBucket,
-      @Value("${app.supabase.jd-bucket:jds}") String jdBucket,
       JpaTalentBridgeStore jpaStore,
       LlmProviderService llmProviderService) {
-    this.storageClient = new SupabaseStorageClient(projectUrl, serviceRoleKey, resumeBucket, jdBucket);
+    this.storageClient = new SupabaseStorageClient(projectUrl, serviceRoleKey, resumeBucket);
     this.jpaStore = jpaStore;
     this.llmProviderService = llmProviderService;
   }
@@ -309,7 +308,7 @@ class SupabaseStorageClient {
   private final String serviceRoleKey;
   private final String resumeBucket;
 
-  SupabaseStorageClient(String projectUrl, String serviceRoleKey, String resumeBucket, String jdBucket) {
+  SupabaseStorageClient(String projectUrl, String serviceRoleKey, String resumeBucket) {
     this.projectUrl = projectUrl;
     this.serviceRoleKey = serviceRoleKey;
     this.resumeBucket = resumeBucket;

@@ -33,7 +33,14 @@ public class JpaTalentBridgeStore {
 
     public RequirementData createRequirement(CreateRequirementRequest request) {
         String id = "req-" + UUID.randomUUID();
-        Company company = companyRepo.findById(request.companyId()).orElseGet(() -> new Company(request.companyId(), "Demo Company", "demo@example.com", Instant.now()));
+        Company company = companyRepo.findById(request.companyId()).orElseGet(() -> {
+            Company newCompany = new Company();
+            newCompany.setId(request.companyId());
+            newCompany.setName("Company " + request.companyId());
+            newCompany.setContactEmail("unknown@company.local");
+            newCompany.setCreatedAt(Instant.now());
+            return newCompany;
+        });
         companyRepo.save(company);
         Requirement requirement = new Requirement();
         requirement.setId(id);
