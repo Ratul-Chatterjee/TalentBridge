@@ -5,9 +5,8 @@ TalentBridge is a full-stack hiring requirements platform for managing company i
 ## Stack
 
 - **Frontend**: React, TypeScript, Vite, Material UI, React Router, Axios
-- **Backend**: Spring Boot 3.4, Java 21, Spring Data JPA, Flyway
+- **Backend**: Spring Boot 3.4, Java 21, Spring Data JPA, Flyway, Railway
 - **Database**: Supabase PostgreSQL and Storage
-- **Auth**: Mock-only frontend auth with company/admin toggle
 
 ## What This App Does
 
@@ -37,9 +36,8 @@ React + MUI frontend  ->  Spring Boot API  ->  PostgreSQL on Supabase
 ## Deployment
 
 ### Quick Start
-- **Frontend on Vercel**: Set `VITE_API_BASE_URL` in Vercel to your public backend URL and redeploy.
-- **Quick Vercel Guide**: See [VERCEL_SETUP.md](./VERCEL_SETUP.md).
-- **Backend**: Deploy Spring Boot separately on Railway, Render, or any public Java host.
+- **Frontend on Vercel**: `VITE_API_BASE_URL` in Vercel from public backend URL.
+- **Backend**: Deployed Spring Boot separately on Railway.
 
 ### Environment Variables
 
@@ -57,8 +55,6 @@ Backend:
 - `OPENAI_API_KEY` — Optional: OpenAI API key
 - `GEMINI_API_KEY` — Optional: Google Gemini API key
 - `ANTHROPIC_API_KEY` — Optional: Anthropic Claude API key
-
-**⚠️ Security Note**: Never commit `.env` files or credentials to GitHub. Use Vercel/Railway/Render secrets instead.
 
 ## Local Development
 
@@ -81,10 +77,8 @@ cd backend
 ## Deployed Setup
 
 - **Frontend**: Vercel
-- **Backend**: any public Java host with a stable URL
+- **Backend**: Railway
 - **Database**: Supabase PostgreSQL
-
-Set `VITE_API_BASE_URL` in Vercel to your deployed backend URL so the frontend points to the live API.
 
 ## Build Checks
 
@@ -100,37 +94,12 @@ cd backend && ..\.tools\apache-maven-3.9.9\bin\mvn.cmd -DskipTests clean compile
 - Stored the active LLM provider in the database so the admin switch works without redeploys.
 - Kept storage upload logic server-side so the service role key never reaches the frontend.
 
-## Trade-offs
-
-- The intake flow is conversational and structured, but still deterministic enough to stay reliable.
-- The admin pipeline is intentionally feature-complete for the assignment rather than enterprise-heavy.
-- LLM calls fall back to structured defaults when keys are missing so the app still works in demo mode.
-
-## Known Limitations
-
-- No real authentication or RBAC.
-- LLM quality depends on whichever provider key is configured.
-- The current admin review and pipeline model is scoped to the assignment, not multi-tenant enterprise use.
-
-## Next Steps If I Had Another Week
-
-- Add stronger validation and autosave in the intake flow.
-- Improve analytics for role fill rates and candidate conversion.
-- Add richer provider-specific prompt tuning and response parsing.
-- Add tests around the AI intake and pipeline updates.
-
 ## API Overview
 
-- `POST /api/auth/login` - mock login
+- `POST /api/auth/login` - login
 - `GET /api/requirements` - list requirements
 - `POST /api/requirements` - create requirement
 - `GET /api/candidates` - list candidates
 - `POST /files/upload-resume` - upload resume
 - `GET /api/settings/llm` - read LLM settings
 - `PUT /api/settings/llm` - update LLM provider
-
-## Security Notes
-
-- Do not commit any `.env` file or secret keys.
-- Keep Supabase service role keys server-side only.
-- Generated build outputs and dependency folders are excluded through `.gitignore`.
